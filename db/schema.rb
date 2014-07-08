@@ -11,10 +11,22 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140707015739) do
+ActiveRecord::Schema.define(version: 20140707225727) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "guides", force: true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "creator_id"
+    t.boolean  "public",      default: true
+    t.string   "url_key"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "guides", ["creator_id"], name: "index_guides_on_creator_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false
