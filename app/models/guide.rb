@@ -4,5 +4,5 @@ class Guide < ActiveRecord::Base
 
 	# Associations
   belongs_to :creator, class_name: "User"
-
+  has_many :saved_guides
 end
