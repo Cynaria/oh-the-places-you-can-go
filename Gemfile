@@ -32,6 +32,9 @@ gem 'spring',        group: :development
 # Use devise for users
 gem 'devise'
 
+# Use Geocoder for locations
+gem 'geocoder'
+
 # Use unicorn as the app server
 # gem 'unicorn'
 
