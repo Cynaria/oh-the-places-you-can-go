@@ -1,5 +1,6 @@
 class HomeController < ApplicationController
+	skip_before_filter :authenticate_user!
 	def index
-		puts request.location.coordinates
+		p request.remote_ip
 	end
 end
