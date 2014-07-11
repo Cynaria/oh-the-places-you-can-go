@@ -12,23 +12,73 @@
       </div>
     <% end %>
     <script type="text/javascript">
-      $(document).ready(function() {
+
+        markers = <%=raw @locations.to_json %>;
+        placeMarkers = [];
+
         var lat = <%= current_user.latitude %>;
         var lng = <%= current_user.longitude %>;
         myLocation = new google.maps.LatLng(lat, lng);
         mapOptions = {
           center: new google.maps.LatLng(myLocation.lat(), myLocation.lng()),
-          zoom: 13,
+          zoom: 10,
           mapTypeId: google.maps.MapTypeId.ROADMAP
         };
-        map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
 
-        google.maps.event.addListener(marker, "dragend", function(evt) {
-          $('#place_latitude').val(evt.latLng.lat().toFixed(6));
-          $('#place_longitude').val(evt.latLng.lng().toFixed(6));
+        function addMarker(marker_info) {
+            var latLng = new google.maps.LatLng(marker_info.latitude, marker_info.longitude);
+            var content = marker_info.infowindow;
+
+            var marker = new google.maps.Marker({
+                position: latLng,
+                map: null,
+                title: marker_info.title,
+            });
+
+            if (marker_info.drop) {
+                marker.setAnimation(google.maps.Animation.DROP);
+            }
+
+            marker.id = marker_info.id;
+            placeMarkers.push(marker);
+
+            var myOptions = {
+                content: content,
+
+                disableAutoPan: false,
+                maxWidth: 150,
+                pixelOffset: new google.maps.Size(-140, 0),
+                zIndex: null,
+                boxStyle: {
+                    background: "url('http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobox/examples/tipbox.gif') no-repeat",
+                    opacity: 0.85,
+                    width: "280px"
+                },
+                closeBoxMargin: "8px 4px 2px 2px",
+                closeBoxURL: "x",
+                infoBoxClearance: new google.maps.Size(1, 1)
+            };
+            
+            google.maps.event.addListener(marker, 'click', function(e) {
+                console.log(e)
+                // map.setZoom(13);
+                // map.setCenter(newPingaMarker.getPosition());
+            });
+          }
+
+        markers.forEach(function(marker){
+          addMarker(marker);
         });
-        
-        google.maps.event.addDomListener(window, "load", getLocation());
-      });
+
+        function setAllMap(map) {
+            for (var i = 0; i < placeMarkers.length; i++) {
+                placeMarkers[i].setMap(map);
+            }
+            
+        }
+
+        map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+        setAllMap(map);
+
   </script>
 </div>
