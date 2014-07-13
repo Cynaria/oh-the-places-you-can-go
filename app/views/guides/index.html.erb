@@ -1,6 +1,6 @@
 <div class="side-bar">
     <% @guides.each do |guide| %>
-      <div class="item" id="<%= guide.url_key %>">
+      <div class="item" id="<%= guide.id %>">
         <%= link_to guide.name, guide %>
         <div class ="description" >
           <%= guide.description %>
@@ -40,45 +40,49 @@
             }
 
             marker.id = marker_info.id;
+            marker.guideId = marker_info.guide_id;
             marker.name = marker_info.name;
             marker.description = marker_info.description;
 
             placeMarkers.push(marker);
 
-            var myOptions = {
-                content: content,
-
-                // disableAutoPan: false,
-                // maxWidth: 150,
-                // pixelOffset: new google.maps.Size(-140, 0),
-                // zIndex: null,
-                // boxStyle: {
-                //     background: "url('http://google-maps-utility-library-v3.googlecode.com/svn/trunk/infobox/examples/tipbox.gif') no-repeat",
-                //     opacity: 0.85,
-                //     width: "280px"
-                // },
-                // closeBoxMargin: "8px 4px 2px 2px",
-                // closeBoxURL: "x",
-                // infoBoxClearance: new google.maps.Size(1, 1)
-            };
-
             infowindow = new google.maps.InfoWindow(); 
 
             google.maps.event.addListener(marker, 'click', function(e) {
-                // console.log(marker)
-                onItemClick(event, marker); 
+                onMapClick(event, marker); 
                 
             });
 
-            function onItemClick(event, marker) { 
+            google.maps.event.addListener(marker, 'click', function(e) {
+                onItemClick(event, marker);              
+            });
+
+            google.maps.event.addListener(marker, 'mouseover', function(e) {
+                onItemMouseOver(event, marker); 
+            });
+
+            google.maps.event.addListener(marker, 'mouseout', function(e) {
+                onItemMouseOut(event, marker); 
+            });
+
+            function onMapClick(event, marker) { 
               // Create content  
               var contentString = "<b>" + marker.name +"</b></br>" + marker.description; 
 
-              // Replace our Info Window's content and position 
+              // Replace Info Window's content and position 
               infowindow.setContent(contentString); 
               infowindow.setPosition(marker.position); 
               infowindow.open(map) 
-            } 
+
+              $("#"+marker.guideId).css({"opacity": "0.7","background-color": "#777"});
+
+            }
+            function onItemMouseOver(event, marker){
+              $("#"+marker.guideId).css({"opacity": "0.7","background-color": "#777"});
+            }
+            function onItemMouseOut(event, marker){
+              $("#"+marker.guideId).css({"opacity": "1","background-color": "#FFF"});
+            }
           }
 
         markers.forEach(function(marker){

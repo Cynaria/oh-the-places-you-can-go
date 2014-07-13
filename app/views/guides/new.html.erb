@@ -2,4 +2,153 @@
 
 <%= render 'form' %>
 
+<%= form_tag do %>
+	<%= submit_tag "Done" %>
+<% end %>
+
 <%= link_to 'Back', guides_path %>
+
+<script type="application/javascript"> 
+	
+	var Guide = {
+			name: null,
+			description: null,
+			places: [],
+	};
+
+	var addPlaceToGuide = function (place){
+		Guide.places.push(place);
+	}
+
+	function Place (latitude,longitude){
+		this.name = null;
+		this.description = null;
+		this.latitude = latitude;
+		this.longitude = longitude;
+	}
+
+		var lat = <%= current_user.latitude %>;
+    var lng = <%= current_user.longitude %>;
+    myLocation = new google.maps.LatLng(lat, lng);
+    mapOptions = {
+      center: new google.maps.LatLng(myLocation.lat(), myLocation.lng()),
+      zoom: 10,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
+
+    markersArray = [];
+
+    function onItemClick(evt) { 
+    	deleteOverlays();
+			var marker = new google.maps.Marker({
+			    position: evt.latLng,
+			    map: map,
+			    title: 'drag to place your marker',
+			    draggable: true
+		  });
+
+      markersArray.push(marker);
+
+			showMarkerForm("#new_guide", marker, place)
+
+			var place = new Place(evt.latLng.lat().toFixed(6),evt.latLng.lng().toFixed(6));
+
+	    google.maps.event.addListener(marker, 'dragend', function(e) {
+	      onItemDrag(e, place);        
+	    });
+
+     //  google.maps.event.addListener(marker, 'mouseover', function(e) {
+     //    onItemMouseOver(event, marker); 
+     //  });
+
+	    // google.maps.event.addListener(marker, 'mouseout', function(e) {
+	    //     onItemMouseOut(event, marker); 
+	    // });
+
+	    function deleteOverlays() {
+	    	removeMarkerForm("#place");
+        if (markersArray) {
+            for (i in markersArray) {
+                markersArray[i].setMap(null);
+            }
+        markersArray.length = 0;
+        }
+      }
+
+	    $("#place").on('submit', function(e){
+	    	e.preventDefault();
+	    	addInfoToPlace(place, $("input[name=place-name]").val(), $("textarea[name=place-description]").val());
+	    	addPlaceToGuide(place);
+	    	deleteOverlays();
+	    	addPermanentMarker(place);
+	    })
+		}
+
+		function addInfoToPlace(place, name, description){
+			place.name = name;
+			place.description = description;
+		}
+
+		function addPermanentMarker(place){
+			var marker = new google.maps.Marker({
+			    position: new google.maps.LatLng(place.latitude, place.longitude),
+			    map: map,
+			    title: 'drag to place your marker'
+		  });
+
+      infowindow = new google.maps.InfoWindow(); 
+
+			marker.name = place.name
+			marker.description = place.description
+
+		  function onMapClick(event, marker) { 
+		    // Create content  
+		    var contentString = "<b>" + marker.name +"</b></br>" + marker.description; 
+
+		    // Replace Info Window's content and position 
+		    infowindow.setContent(contentString); 
+		    infowindow.setPosition(marker.position); 
+		    infowindow.open(map) 
+
+		  }
+
+      google.maps.event.addListener(marker, 'click', function(e) {
+          onMapClick(event, marker);  
+      });
+
+		}
+
+		function onItemDrag(evt, place) { 
+      place.latitude = evt.latLng.lat().toFixed(6);
+      place.longitude = evt.latLng.lng().toFixed(6);
+		}
+
+		function showMarkerForm(section, marker, place){
+			console.log(marker);
+			$(section).after("<div id=\"place\"><div><form><label>Place Name: <input name=\"place-name\"></label><input type=\"submit\" value=\"Add Place\"></div><label>Place Description: <textarea name=\"place-description\" col=\"30\" rows=\"10\"></textarea><div></form></div></div>")
+		}
+
+		function removeMarkerForm(section){
+			$(section).remove();
+		}
+
+		// On form submit add details to marker then add it to guide
+		// addPlaceToGuide(place);
+
+    map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+
+    google.maps.event.addListener(map, 'click', function(e) {
+      onItemClick(e);        
+    });
+
+    // form submit
+
+
+
+
+// create guide object
+// create places object
+// send over as json! :D
+// parse!
+// magic!
+</script>

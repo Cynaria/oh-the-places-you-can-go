@@ -1,3 +1,4 @@
+  <div id="map-canvas" style='width: 800px; height: 400px;'></div>
 <%= form_for(@guide) do |f| %>
   <% if @guide.errors.any? %>
     <div id="error_explanation">
@@ -11,7 +12,12 @@
     </div>
   <% end %>
 
-  <div class="actions">
-    <%= f.submit %>
+  <div>
+    <%= f.text_field :name %>
   </div>
+  
+  <div>
+    <%= f.text_area :description, :cols => "30", :rows => "10"%>
+  </div>
+
 <% end %>
