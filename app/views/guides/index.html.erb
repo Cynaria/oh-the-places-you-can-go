@@ -43,18 +43,15 @@
             marker.guideId = marker_info.guide_id;
             marker.name = marker_info.name;
             marker.description = marker_info.description;
+            marker.contentString = "<b>" + marker.name +"</b></br>" + marker.description; 
 
             placeMarkers.push(marker);
 
             infowindow = new google.maps.InfoWindow(); 
 
             google.maps.event.addListener(marker, 'click', function(e) {
-                onMapClick(event, marker); 
+                onItemClick(marker, map); 
                 
-            });
-
-            google.maps.event.addListener(marker, 'click', function(e) {
-                onItemClick(event, marker);              
             });
 
             google.maps.event.addListener(marker, 'mouseover', function(e) {
@@ -65,23 +62,33 @@
                 onItemMouseOut(event, marker); 
             });
 
-            function onMapClick(event, marker) { 
-              // Create content  
-              var contentString = "<b>" + marker.name +"</b></br>" + marker.description; 
-
-              // Replace Info Window's content and position 
-              infowindow.setContent(contentString); 
-              infowindow.setPosition(marker.position); 
-              infowindow.open(map) 
-
-              $("#"+marker.guideId).css({"opacity": "0.7","background-color": "#777"});
-
+            function onItemClick(marker,map) { 
+              highlightGuide(marker);
+              disableOnItemMouseOut(marker);
+              createInfoBox(marker,map);
             }
+
             function onItemMouseOver(event, marker){
-              $("#"+marker.guideId).css({"opacity": "0.7","background-color": "#777"});
+              highlightGuide(marker);
             }
             function onItemMouseOut(event, marker){
               $("#"+marker.guideId).css({"opacity": "1","background-color": "#FFF"});
+            }
+
+            function disableOnItemMouseOut(marker){
+              google.maps.event.addListener(marker, 'mouseout', function(e) {
+                highlightGuide(marker); 
+              });
+            }
+
+            function highlightGuide(marker){
+              $("#"+marker.guideId).css({"opacity": "0.7","background-color": "#777"});
+            }
+
+            function createInfoBox(marker,map){
+              infowindow.setContent(marker.contentString); 
+              infowindow.setPosition(marker.position); 
+              infowindow.open(map) 
             }
           }
 

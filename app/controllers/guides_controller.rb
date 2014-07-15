@@ -26,12 +26,16 @@ class GuidesController < ApplicationController
   # POST /guides
   # POST /guides.json
   def create
-    @guide = Guide.new(guide_params)
+    puts guide_params
+    @guide = current_user.created_guides.new(guide_params)
+    # guide_params[:places].each do |place|
+    #   puts place
+    # end
 
     respond_to do |format|
       if @guide.save
-        format.html { redirect_to @guide, notice: 'Guide was successfully created.' }
         format.json { render :show, status: :created, location: @guide }
+        format.html { redirect_to @guide, notice: 'Guide was successfully created.' }
       else
         format.html { render :new }
         format.json { render json: @guide.errors, status: :unprocessable_entity }
@@ -77,6 +81,7 @@ class GuidesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def guide_params
-      params[:guide]
+      # json_params = ActionController::Parameters.new( JSON.parse(request.body.read) )
+      params.permit(:name, :description, places_attributes: [:name, :description, :latitude, :longitude])
     end
 end

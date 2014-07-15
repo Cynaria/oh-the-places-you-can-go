@@ -2,10 +2,6 @@
 
 <%= render 'form' %>
 
-<%= form_tag do %>
-	<%= submit_tag "Done" %>
-<% end %>
-
 <%= link_to 'Back', guides_path %>
 
 <script type="application/javascript"> 
@@ -13,11 +9,11 @@
 	var Guide = {
 			name: null,
 			description: null,
-			places: [],
+			places_attributes: [],
 	};
 
 	var addPlaceToGuide = function (place){
-		Guide.places.push(place);
+		Guide.places_attributes.push(place);
 	}
 
 	function Place (latitude,longitude){
@@ -49,7 +45,7 @@
 
       markersArray.push(marker);
 
-			showMarkerForm("#new_guide", marker, place)
+			showMarkerForm("#submit-guide", marker, place)
 
 			var place = new Place(evt.latLng.lat().toFixed(6),evt.latLng.lng().toFixed(6));
 
@@ -100,23 +96,23 @@
 
 			marker.name = place.name
 			marker.description = place.description
+			marker.contentString = "<b>" + marker.name +"</b></br>" + marker.description; 
 
-		  function onMapClick(event, marker) { 
-		    // Create content  
-		    var contentString = "<b>" + marker.name +"</b></br>" + marker.description; 
-
-		    // Replace Info Window's content and position 
-		    infowindow.setContent(contentString); 
-		    infowindow.setPosition(marker.position); 
-		    infowindow.open(map) 
-
+		  function onMapClick(marker, map) { 
+		   createInfoBox(marker,map)
 		  }
 
       google.maps.event.addListener(marker, 'click', function(e) {
-          onMapClick(event, marker);  
+          onMapClick(marker,map);  
       });
 
 		}
+
+		function createInfoBox(marker,map){
+      infowindow.setContent(marker.contentString); 
+      infowindow.setPosition(marker.position); 
+      infowindow.open(map) 
+    }
 
 		function onItemDrag(evt, place) { 
       place.latitude = evt.latLng.lat().toFixed(6);
@@ -125,7 +121,7 @@
 
 		function showMarkerForm(section, marker, place){
 			console.log(marker);
-			$(section).after("<div id=\"place\"><div><form><label>Place Name: <input name=\"place-name\"></label><input type=\"submit\" value=\"Add Place\"></div><label>Place Description: <textarea name=\"place-description\" col=\"30\" rows=\"10\"></textarea><div></form></div></div>")
+			$(section).before("<div id=\"place\"><div><form><label>Place Name: <input name=\"place-name\"></label><input type=\"submit\" value=\"Add Place\"></div><label>Place Description: <textarea name=\"place-description\" col=\"30\" rows=\"10\"></textarea><div></form></div></div>")
 		}
 
 		function removeMarkerForm(section){
@@ -142,7 +138,23 @@
     });
 
     // form submit
-
+    $('#new_guide').on('submit',function(e) {  
+    	e.preventDefault();
+    	Guide.name = $("#guide_name").val();
+    	Guide.description = $("#guide_description").val();
+    	var data = Guide
+    	var url = $(this).attr('action') 
+	    $.ajax({
+	    		type: "POST",
+	        url: url, //sumbits it to the given url of the form
+	        data: data,
+	        dataType: "JSON",
+	        success: function(response){
+	        	window.location = response.id
+	        }
+	    });
+	    // return false; // prevents normal behaviour
+		});
 
 
 

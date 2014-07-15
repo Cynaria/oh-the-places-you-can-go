@@ -7,4 +7,5 @@ class Guide < ActiveRecord::Base
   belongs_to :creator, class_name: "User"
   has_many :saved_guides
 
+  accepts_nested_attributes_for :places
 end
