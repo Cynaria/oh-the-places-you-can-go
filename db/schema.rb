@@ -11,10 +11,58 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20140707015739) do
+ActiveRecord::Schema.define(version: 20140709204319) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "guides", force: true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.integer  "creator_id"
+    t.boolean  "public",      default: true
+    t.string   "url_key"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "guides", ["creator_id"], name: "index_guides_on_creator_id", using: :btree
+
+  create_table "locations", force: true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.float    "latitude"
+    t.float    "longitude"
+    t.string   "address"
+    t.integer  "guide_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "locations", ["guide_id"], name: "index_locations_on_guide_id", using: :btree
+
+  create_table "places", force: true do |t|
+    t.string   "name"
+    t.text     "description"
+    t.float    "latitude"
+    t.float    "longitude"
+    t.string   "address"
+    t.integer  "guide_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "places", ["guide_id"], name: "index_places_on_guide_id", using: :btree
+
+  create_table "saved_guides", force: true do |t|
+    t.integer  "user_id"
+    t.integer  "guide_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "saved_guides", ["guide_id"], name: "index_saved_guides_on_guide_id", using: :btree
+  add_index "saved_guides", ["user_id"], name: "index_saved_guides_on_user_id", using: :btree
 
   create_table "users", force: true do |t|
     t.string   "email",                  default: "", null: false
@@ -30,6 +78,9 @@ ActiveRecord::Schema.define(version: 20140707015739) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "username"
+    t.string   "ip_address"
+    t.float    "latitude"
+    t.float    "longitude"
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree

@@ -1,0 +1,110 @@
+<div class="side-bar">
+    <% @guides.each do |guide| %>
+      <div class="item" id="<%= guide.id %>">
+        <%= link_to guide.name, guide %>
+        <div class ="description" >
+          <%= guide.description %>
+        </div>
+        <% if user_is_creator?(guide) %>
+          <%= link_to 'Edit', edit_guide_path(guide) %>
+          <%= link_to 'Destroy', guide, method: :delete, data: { confirm: 'Are you sure?' } %>
+        <% end %>
+      </div>
+    <% end %>
+    <script type="text/javascript">
+
+        markers = <%=raw @locations.to_json %>;
+        placeMarkers = [];
+
+        var lat = <%= current_user.latitude %>;
+        var lng = <%= current_user.longitude %>;
+        myLocation = new google.maps.LatLng(lat, lng);
+        mapOptions = {
+          center: new google.maps.LatLng(myLocation.lat(), myLocation.lng()),
+          zoom: 10,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        };
+
+        function addMarker(marker_info) {
+            var latLng = new google.maps.LatLng(marker_info.latitude, marker_info.longitude);
+            var content = marker_info.infowindow;
+
+            var marker = new google.maps.Marker({
+                position: latLng,
+                map: null,
+                title: marker_info.name,
+            });
+
+            if (marker_info.drop) {
+                marker.setAnimation(google.maps.Animation.DROP);
+            }
+
+            marker.id = marker_info.id;
+            marker.guideId = marker_info.guide_id;
+            marker.name = marker_info.name;
+            marker.description = marker_info.description;
+            marker.contentString = "<b>" + marker.name +"</b></br>" + marker.description; 
+
+            placeMarkers.push(marker);
+
+            infowindow = new google.maps.InfoWindow(); 
+
+            google.maps.event.addListener(marker, 'click', function(e) {
+                onItemClick(marker, map); 
+                
+            });
+
+            google.maps.event.addListener(marker, 'mouseover', function(e) {
+                onItemMouseOver(event, marker); 
+            });
+
+            google.maps.event.addListener(marker, 'mouseout', function(e) {
+                onItemMouseOut(event, marker); 
+            });
+
+            function onItemClick(marker,map) { 
+              highlightGuide(marker);
+              disableOnItemMouseOut(marker);
+              createInfoBox(marker,map);
+            }
+
+            function onItemMouseOver(event, marker){
+              highlightGuide(marker);
+            }
+            function onItemMouseOut(event, marker){
+              $("#"+marker.guideId).css({"opacity": "1","background-color": "#FFF"});
+            }
+
+            function disableOnItemMouseOut(marker){
+              google.maps.event.addListener(marker, 'mouseout', function(e) {
+                highlightGuide(marker); 
+              });
+            }
+
+            function highlightGuide(marker){
+              $("#"+marker.guideId).css({"opacity": "0.7","background-color": "#777"});
+            }
+
+            function createInfoBox(marker,map){
+              infowindow.setContent(marker.contentString); 
+              infowindow.setPosition(marker.position); 
+              infowindow.open(map) 
+            }
+          }
+
+        markers.forEach(function(marker){
+          addMarker(marker);
+        });
+
+        function setAllMap(map) {
+            for (var i = 0; i < placeMarkers.length; i++) {
+                placeMarkers[i].setMap(map);
+            }
+            
+        }
+
+        map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+        setAllMap(map);
+
+  </script>
+</div>
