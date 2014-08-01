@@ -10,20 +10,35 @@
   <%= csrf_meta_tags %>
 </head>
 <body>
-	<nav>
-	<p class="navbar-text pull-right">
-	<% if user_signed_in? %>
-		<%= current_user.username %>
-		<%= link_to 'Edit profile', edit_user_registration_path, :class => 'navbar-link' %>
-		<%= link_to "Logout", destroy_user_session_path, method: :delete, :class => 'navbar-link'  %>
-	<% else %>
-		<%= link_to "Sign up", new_user_registration_path, :class => 'navbar-link'  %> |
-		<%= link_to "Login", new_user_session_path, :class => 'navbar-link'  %>
-	<% end %>
-	<p class="notice"><%= notice %></p>
-	<p class="alert"><%= alert %></p>
-</nav>
-	<div id="map-canvas" style='width: 800px; height: 550px;'></div>
-	<%= yield %>
+	<div class="nav">
+		<div class="nav-links">
+			<%= link_to "See what's in your area", guides_path, :class => 'button' %>
+		</div>
+		<div class="user-controls">
+			<% if user_signed_in? %>
+				<%= current_user.username %>
+				<%= link_to "Add a Guide", new_guide_path, :class => 'button' %>
+				<!-- cog icon font -->
+				<%= link_to "Settings", edit_user_registration_path, :class => 'button' %>
+				<%= link_to "Logout", destroy_user_session_path, method: :delete, :class => 'button'  %>
+			<% else %>
+				<%= link_to "Sign up", new_user_registration_path, :class => 'button'  %> 
+				<%= link_to "Login", new_user_session_path, :class => 'button'  %>
+			<% end %>
+		</div>
+		<div class="home">
+			<%= link_to "Roam", root_path %>
+		</div>
+		<div class="alerts">
+			<p class="notice"><%= notice %></p>
+			<p class="alert"><%= alert %></p>
+		</div>
+	</div>
+	<section>
+		<%= yield %>
+	</section>
+	<footer>
+		
+	</footer>
 </body>
 </html>

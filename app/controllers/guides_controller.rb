@@ -12,6 +12,7 @@ class GuidesController < ApplicationController
   # GET /guides/1
   # GET /guides/1.json
   def show
+    @locations = @guide.places
   end
 
   # GET /guides/new
@@ -21,6 +22,8 @@ class GuidesController < ApplicationController
 
   # GET /guides/1/edit
   def edit
+    @center_point = @guide.get_center_point
+    @locations = @guide.places
   end
 
   # POST /guides
