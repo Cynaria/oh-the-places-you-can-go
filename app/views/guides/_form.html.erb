@@ -12,15 +12,17 @@
   <% end %>
 
   <div>
-    <%= f.text_field :name %>
+    <%= f.label :name %>
+    <%= f.text_field :name, :placeholder => "Guide Name" %>
   </div>
   
   <div>
-    <%= f.text_area :description, :cols => "30", :rows => "10"%>
+    <%= f.label :description %>
+    <%= f.text_area :description, :cols => "30", :rows => "10", :placeholder => "Guide Description" %>
   </div>
 
   <div id="submit-guide">
-    <%= f.submit 'done' %>
+    <%= f.submit 'done', :class => 'button' %>
   </div>
 
 <% end %>

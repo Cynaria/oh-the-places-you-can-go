@@ -4,3 +4,152 @@
 
 <%= link_to 'Show', @guide %> |
 <%= link_to 'Back', guides_path %>
+
+<script type="application/javascript">
+	// map setup
+	var markers = <%=raw @locations.to_json %>;
+  var placeMarkers = [];
+	var lat = <%= @center_point[0] %>;
+  var lng = <%= @center_point[1] %>;
+
+  var myLocation = new google.maps.LatLng(lat, lng);
+
+  var mapOptions = {
+    center: new google.maps.LatLng(myLocation.lat(), myLocation.lng()),
+    zoom: 10,
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  };
+
+  var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+
+  // setup for guide to submit
+	var Guide = {
+			name: "<%= @guide.name %>",
+			description: "<%= @guide.description %>",
+			places_attributes: []
+	};
+
+	var addPlaceToGuide = function (place){
+		Guide.places_attributes.push(place);
+	}
+
+	var deletePlaceFromGuide = function (place){
+		var placeIndex = Guide.places_attributes.indexOf(place);
+
+		if (index > -1) {
+	    array.splice(index, 1);
+		}
+	}
+
+	function Place (id, name, description,latitude,longitude){
+		this.id = id;
+		this.name = name;
+		this.description = description;
+		this.latitude = latitude;
+		this.longitude = longitude;
+	}
+
+  function addMarker(marker_info) {
+    var latLng = new google.maps.LatLng(marker_info.latitude, marker_info.longitude);
+    var content = marker_info.infowindow;
+
+    var marker = new google.maps.Marker({
+      position: latLng,
+      map: null,
+      title: marker_info.name,
+	    draggable: true
+    });
+
+    if (marker_info.drop) {
+        marker.setAnimation(google.maps.Animation.DROP);
+    }
+
+    marker.id = marker_info.id;
+    marker.guideId = marker_info.guide_id;
+    marker.name = marker_info.name;
+    marker.description = marker_info.description;
+    marker.contentString = "<b>" + marker.name +"</b></br>" + marker.description; 
+
+    placeMarkers.push(marker);
+
+    var infowindow = new google.maps.InfoWindow(); 
+
+
+    function createInfoBox(marker,map){
+      infowindow.setContent(marker.contentString); 
+      infowindow.setPosition(marker.position); 
+      infowindow.open(map) 
+    }
+
+		function onItemDrag(evt, place) { 
+	    place.latitude = evt.latLng.lat().toFixed(6);
+	    place.longitude = evt.latLng.lng().toFixed(6);
+		}
+
+		function findPlace(id){
+			var found;
+
+			Guide.places_attributes.forEach(function(place){
+			  if(place.id == id){
+			    found = place;
+			  }
+			});
+			return found
+		}
+
+		function showMarkerForm(section, marker, place){
+			$(section).before("<div id=\"place\"><div><form><input type=\"hidden\" name=\"place-id\" value=\"" + place.id + "\"></div><div><label>Place Name: <input name=\"place-name\" value=\"" + place.name + "\"></label></div><div><input type=\"submit\" value=\"Add Place\"></div><div><label>Place Description: <textarea name=\"place-description\" col=\"30\" rows=\"10\">" + place.description + "</textarea></label></div></form></div>")
+		}
+
+		function removeMarkerForm(section){
+			$(section).remove();
+		}
+
+		function deleteOverlays() {
+    	removeMarkerForm("#place");
+      if (markersArray) {
+          for (i in markersArray) {
+              markersArray[i].setMap(null);
+          }
+      markersArray.length = 0;
+      }
+    }
+
+		$("#place").on('submit', function(e){
+    	e.preventDefault();
+    });
+
+		google.maps.event.addListener(marker, 'click', function(e){
+			removeMarkerForm("#place");
+	  	var place = findPlace(marker.id);
+			showMarkerForm("#submit-guide", marker, place);
+		});
+
+	  google.maps.event.addListener(marker, 'dragend', function(e){
+	  	place = findPlace(marker.id);
+	  	onItemDrag(e, place);
+	  });
+  }
+
+  markers.forEach(function(marker){
+  	var place = new Place(
+  		marker.id,
+  		marker.name, 
+  		marker.description, 
+  		marker.latitude, 
+  		marker.longitude
+		)
+  	addPlaceToGuide(place);
+
+    addMarker(marker);
+  });
+
+  function setAllMap(map) {
+      for (var i = 0; i < placeMarkers.length; i++) {
+          placeMarkers[i].setMap(map);
+      }        
+  }
+
+
+  setAllMap(map)
+</script>

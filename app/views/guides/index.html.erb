@@ -1,4 +1,5 @@
-<div class="side-bar">
+<div id="map-canvas"></div>
+<div class="sidebar">
     <% @guides.each do |guide| %>
       <div class="item" id="<%= guide.id %>">
         <%= link_to guide.name, guide %>
@@ -63,7 +64,7 @@
             });
 
             function onItemClick(marker,map) { 
-              highlightGuide(marker);
+              // highlightGuide(marker);
               disableOnItemMouseOut(marker);
               createInfoBox(marker,map);
             }
@@ -72,7 +73,7 @@
               highlightGuide(marker);
             }
             function onItemMouseOut(event, marker){
-              $("#"+marker.guideId).css({"opacity": "1","background-color": "#FFF"});
+              $("#"+marker.guideId).removeClass("highlighted");
             }
 
             function disableOnItemMouseOut(marker){
@@ -82,7 +83,7 @@
             }
 
             function highlightGuide(marker){
-              $("#"+marker.guideId).css({"opacity": "0.7","background-color": "#777"});
+              $("#"+marker.guideId).addClass("highlighted");
             }
 
             function createInfoBox(marker,map){

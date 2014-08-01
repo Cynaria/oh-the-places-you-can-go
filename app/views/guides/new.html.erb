@@ -1,10 +1,24 @@
-<h1>New guide</h1>
+<div id="map-canvas"></div>
 
+<div class="sidebar">
 <%= render 'form' %>
 
-<%= link_to 'Back', guides_path %>
+<%= link_to 'Back', guides_path, :class => 'button' %>
+</div>
 
 <script type="application/javascript"> 
+	// map setup
+  var markersArray = [];
+	var lat = <%= current_user.latitude %>;
+  var lng = <%= current_user.longitude %>;
+  var myLocation = new google.maps.LatLng(lat, lng);
+  var mapOptions = {
+    center: new google.maps.LatLng(myLocation.lat(), myLocation.lng()),
+    zoom: 10,
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  };
+
+  var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
 	
 	var Guide = {
 			name: null,
@@ -23,138 +37,114 @@
 		this.longitude = longitude;
 	}
 
-		var lat = <%= current_user.latitude %>;
-    var lng = <%= current_user.longitude %>;
-    myLocation = new google.maps.LatLng(lat, lng);
-    mapOptions = {
-      center: new google.maps.LatLng(myLocation.lat(), myLocation.lng()),
-      zoom: 10,
-      mapTypeId: google.maps.MapTypeId.ROADMAP
-    };
 
-    markersArray = [];
 
-    function onItemClick(evt) { 
-    	deleteOverlays();
-			var marker = new google.maps.Marker({
-			    position: evt.latLng,
-			    map: map,
-			    title: 'drag to place your marker',
-			    draggable: true
-		  });
+  function onItemClick(evt) { 
+  	deleteOverlays();
+		var marker = new google.maps.Marker({
+		    position: evt.latLng,
+		    map: map,
+		    title: 'drag to place your marker',
+		    draggable: true
+	  });
 
-      markersArray.push(marker);
+    markersArray.push(marker);
 
-			showMarkerForm("#submit-guide", marker, place)
+		var place = new Place(evt.latLng.lat().toFixed(6),evt.latLng.lng().toFixed(6));
 
-			var place = new Place(evt.latLng.lat().toFixed(6),evt.latLng.lng().toFixed(6));
+		showMarkerForm("#submit-guide", marker, place)
 
-	    google.maps.event.addListener(marker, 'dragend', function(e) {
-	      onItemDrag(e, place);        
-	    });
-
-     //  google.maps.event.addListener(marker, 'mouseover', function(e) {
-     //    onItemMouseOver(event, marker); 
-     //  });
-
-	    // google.maps.event.addListener(marker, 'mouseout', function(e) {
-	    //     onItemMouseOut(event, marker); 
-	    // });
-
-	    function deleteOverlays() {
-	    	removeMarkerForm("#place");
-        if (markersArray) {
-            for (i in markersArray) {
-                markersArray[i].setMap(null);
-            }
-        markersArray.length = 0;
-        }
-      }
-
-	    $("#place").on('submit', function(e){
-	    	e.preventDefault();
-	    	addInfoToPlace(place, $("input[name=place-name]").val(), $("textarea[name=place-description]").val());
-	    	addPlaceToGuide(place);
-	    	deleteOverlays();
-	    	addPermanentMarker(place);
-	    })
-		}
-
-		function addInfoToPlace(place, name, description){
-			place.name = name;
-			place.description = description;
-		}
-
-		function addPermanentMarker(place){
-			var marker = new google.maps.Marker({
-			    position: new google.maps.LatLng(place.latitude, place.longitude),
-			    map: map,
-			    title: 'drag to place your marker'
-		  });
-
-      infowindow = new google.maps.InfoWindow(); 
-
-			marker.name = place.name
-			marker.description = place.description
-			marker.contentString = "<b>" + marker.name +"</b></br>" + marker.description; 
-
-		  function onMapClick(marker, map) { 
-		   createInfoBox(marker,map)
-		  }
-
-      google.maps.event.addListener(marker, 'click', function(e) {
-          onMapClick(marker,map);  
-      });
-
-		}
-
-		function createInfoBox(marker,map){
-      infowindow.setContent(marker.contentString); 
-      infowindow.setPosition(marker.position); 
-      infowindow.open(map) 
-    }
-
-		function onItemDrag(evt, place) { 
-      place.latitude = evt.latLng.lat().toFixed(6);
-      place.longitude = evt.latLng.lng().toFixed(6);
-		}
-
-		function showMarkerForm(section, marker, place){
-			console.log(marker);
-			$(section).before("<div id=\"place\"><div><form><label>Place Name: <input name=\"place-name\"></label><input type=\"submit\" value=\"Add Place\"></div><label>Place Description: <textarea name=\"place-description\" col=\"30\" rows=\"10\"></textarea><div></form></div></div>")
-		}
-
-		function removeMarkerForm(section){
-			$(section).remove();
-		}
-
-		// On form submit add details to marker then add it to guide
-		// addPlaceToGuide(place);
-
-    map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
-
-    google.maps.event.addListener(map, 'click', function(e) {
-      onItemClick(e);        
+    google.maps.event.addListener(marker, 'dragend', function(e) {
+      onItemDrag(e, place);        
     });
 
-    // form submit
-    $('#new_guide').on('submit',function(e) {  
+		// Remove markers from map
+    function deleteOverlays() {
+    	removeMarkerForm("#place");
+      if (markersArray) {
+          for (i in markersArray) {
+              markersArray[i].setMap(null);
+          }
+      markersArray.length = 0;
+      }
+    }
+
+    $("#place").on('submit', function(e){
     	e.preventDefault();
-    	Guide.name = $("#guide_name").val();
-    	Guide.description = $("#guide_description").val();
-    	var data = Guide
-    	var url = $(this).attr('action') 
-	    $.ajax({
-	    		type: "POST",
-	        url: url, //sumbits it to the given url of the form
-	        data: data,
-	        dataType: "JSON",
-	        success: function(response){
-	        	window.location = response.id
-	        }
-	    });
-	    // return false; // prevents normal behaviour
-		});
+    	addInfoToPlace(place, $("input[name=place-name]").val(), $("textarea[name=place-description]").val());
+    	addPlaceToGuide(place);
+    	deleteOverlays();
+    	addPermanentMarker(place);
+    });
+	}
+
+	function addInfoToPlace(place, name, description){
+		place.name = name;
+		place.description = description;
+	}
+
+	function addPermanentMarker(place){
+		var marker = new google.maps.Marker({
+		    position: new google.maps.LatLng(place.latitude, place.longitude),
+		    map: map,
+	  });
+
+    infowindow = new google.maps.InfoWindow(); 
+
+		marker.name = place.name
+		marker.description = place.description
+		marker.contentString = "<b>" + marker.name +"</b></br>" + marker.description; 
+
+    google.maps.event.addListener(marker, 'click', function(e) {
+			createInfoBox(marker,map)
+    });
+
+	}
+
+	function createInfoBox(marker,map){
+    infowindow.setContent(marker.contentString); 
+    infowindow.setPosition(marker.position); 
+    infowindow.open(map) 
+  }
+
+	function onItemDrag(evt, place) { 
+    place.latitude = evt.latLng.lat().toFixed(6);
+    place.longitude = evt.latLng.lng().toFixed(6);
+	}
+
+	function showMarkerForm(section, marker, place){
+		$(section).before("<div id=\"place\"><div><form><label for=\"place-name\">Place Name: </label><input placeholder=\"Place Name\" id=\"place-name\" name=\"place-name\"><label for=\"place-description\">Place Description: </label><textarea id=\"place-description\" name=\"place-description\" placeholder=\"Place Description\" col=\"30\" rows=\"10\"></textarea><div><input class=\"button\"type=\"submit\" value=\"Add Place\"></div></form></div></div>")
+	}
+
+	function removeMarkerForm(section){
+		$(section).remove();
+	}
+
+	// On form submit add details to marker then add it to guide
+	// addPlaceToGuide(place);
+
+
+  google.maps.event.addListener(map, 'click', function(e) {
+    onItemClick(e);        
+  });
+
+  // form submit
+  $('#new_guide').on('submit',function(e) {  
+  	e.preventDefault();
+  	Guide.name = $("#guide_name").val();
+  	Guide.description = $("#guide_description").val();
+  	var data = Guide
+  	var url = $(this).attr('action') 
+    $.ajax({
+    		type: "POST",
+        url: url,
+        data: data,
+        dataType: "JSON",
+        success: function(response){
+        	window.location = response.id
+        }
+    });
+	});
 
 
 
