@@ -1,6 +1,9 @@
 $main-color:  #f2eae4;
-
+html{
+	height: 100%;
+}
 body{
+	height: 100%;
 	margin: 0;
 	padding: 0;
 	font-family: 'Roboto', sans-serif;
@@ -8,28 +11,28 @@ body{
 	color: $main-color;
 }
 
-.highlighted{
-	background: '#fff';
-}
 
 .sidebar{
 	display: inline-block;
   right: 0;
-  top: 55px;
+  top: 10%;
   width: 18%;
   background: #555;
   position: fixed;
   height: 100%;
   padding: 1%;
+  overflow: scroll;
 }
 
 
+section{
+	height: 100%;
+	top: 10%;
+}
 #map-canvas{
 	width: 80%;
-	height: 650px;
-}
-section{
-	padding-top: 55px;
+	height: 90%;
+	top: 10%;
 }
 
 .nav a{
@@ -38,6 +41,7 @@ section{
 }
 
 .nav{
+	height: 10%;
 	position: fixed;
 	top: 0;
 	width:100%;
@@ -70,9 +74,6 @@ section{
 	float: right;
 	font-weight: 400;
 
-
-
-
 	a{
 		font-weight: 100;
 	}
@@ -102,4 +103,19 @@ label{
     -o-transition: background 200ms ;
     -ms-transition: background 200ms ;
     transition: background 200ms ;
+}
+
+.item{
+	padding: 5px 0;
+	border-bottom: 2px solid #888;
+	a{
+		color: #b2dedb;
+		border-bottom: 1px solid #888;
+		text-decoration: none;
+	}
+}
+
+.highlighted{
+	background: #a16b66;
+	// border-radius: 5px;
 }

@@ -1,5 +1,19 @@
-<h1><%= @guide.name %></h1>
-  <div id="map-canvas" style='width: 800px; height: 550px;'></div>
+<div id="map-canvas"></div>
+<div class="sidebar">
+  <h3><%= @guide.name %></h3>
+    <% @guide.places.each do |place| %>
+      <div class="item" id="<%= place.id %>">
+        <%= link_to place.name, place %>
+        <div class ="description" >
+          <%= place.description %>
+        </div>
+        <% if user_is_creator?(place.guide) %>
+          <%= link_to 'Edit', edit_place_path(place) %>
+          <%= link_to 'Destroy', place, method: :delete, data: { confirm: 'Are you sure?' } %>
+        <% end %>
+      </div>
+    <% end %>
+</div>
 <%= link_to 'Edit', edit_guide_path(@guide) %> |
 <%= link_to 'Back', guides_path %>
 <script type="text/javascript">
@@ -31,7 +45,6 @@
           }
 
           marker.id = marker_info.id;
-          marker.guideId = marker_info.guide_id;
           marker.name = marker_info.name;
           marker.description = marker_info.description;
           marker.contentString = "<b>" + marker.name +"</b></br>" + marker.description; 
@@ -62,17 +75,17 @@
             highlightGuide(marker);
           }
           function onItemMouseOut(event, marker){
-            $("#"+marker.guideId).css({"opacity": "1","background-color": "#FFF"});
+            $("#"+marker.id).removeClass("highlighted");
           }
 
           function disableOnItemMouseOut(marker){
             google.maps.event.addListener(marker, 'mouseout', function(e) {
-              highlightGuide(marker); 
+              highlightPlace(marker); 
             });
           }
 
-          function highlightGuide(marker){
-            $("#"+marker.guideId).css({"opacity": "0.7","background-color": "#777"});
+          function highlightPlace(marker){
+            $("#"+marker.id).addClass("highlighted");
           }
 
           function createInfoBox(marker,map){
