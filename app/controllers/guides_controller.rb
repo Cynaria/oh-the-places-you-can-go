@@ -1,17 +1,29 @@
 class GuidesController < ApplicationController
   before_action :set_guide, only: [:show, :edit, :update, :destroy]
-  before_action :set_ip_address
+  before_action :set_ip_address, except: :zip
 
-
+  def zip
+    @zip = params[:zip]
+    guides_path(:zip=>@zip)
+  end
 
   def index
-    @locations = current_user.find_places_in_radius(20)
-    @guides = current_user.find_guides_in_radius(20)
+    puts params[:zip]
+    if params["zip"]
+      @search_center = [params[:zip].to_lat, params[:zip].to_lon]
+      puts @search_center
+      @locations = Place.find_places_in_radius(zip,20)
+      @guides = Guide.find_guides_in_radius(zip, 20)
+    else
+      @locations = Place.find_places_in_radius(@search_center,20)
+      @guides = Guide.find_guides_in_radius(@search_center, 20)
+    end
   end
 
   # GET /guides/1
   # GET /guides/1.json
   def show
+    @center_point = @guide.get_center_point
     @locations = @guide.places
   end
 
@@ -73,9 +85,11 @@ class GuidesController < ApplicationController
   private
 
   def set_ip_address
-      current_user.ip_address = request.remote_ip
-      current_user.geocode
+      user_ip_address = request.location
+      @search_center = [user_ip_address.latitude, user_ip_address.longitude]
   end
+
+
 
     # Use callbacks to share common setup or constraints between actions.
     def set_guide

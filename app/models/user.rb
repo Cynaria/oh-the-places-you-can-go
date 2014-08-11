@@ -21,15 +21,6 @@ class User < ActiveRecord::Base
 
   # class methods
 
-  def find_places_in_radius(radius)
-    Place.near(self,radius)
-  end
-
-  def find_guides_in_radius(radius)
-    places_near_user = find_places_in_radius(radius)
-    places_near_user.map {|place| place.guide}.uniq
-  end
-
   def self.find_for_database_authentication(warden_conditions)
     conditions = warden_conditions.dup
     if login = conditions.delete(:login)
