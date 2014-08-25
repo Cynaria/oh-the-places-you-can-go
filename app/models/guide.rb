@@ -24,6 +24,6 @@ class Guide < ActiveRecord::Base
   private
 
   def get_avg(num_arr)
-  	num_arr.inject(:+)/num_arr.length
+  	(num_arr.inject(:+)) / num_arr.length
   end
 end
