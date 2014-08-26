@@ -2,7 +2,7 @@
 <div class="sidebar">
   <h3><%= @guide.name %></h3>
     <% @guide.places.each do |place| %>
-    <% unless nil %>
+    <% if place %>
       <div class="item" id="<%= place.id %>">
         <%= link_to place.name, place %>
         <div class ="description" >
