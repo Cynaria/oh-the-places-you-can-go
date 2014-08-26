@@ -43,9 +43,7 @@ class GuidesController < ApplicationController
   def create
     puts guide_params
     @guide = current_user.created_guides.new(guide_params)
-    # guide_params[:places].each do |place|
-    #   puts place
-    # end
+
 
     respond_to do |format|
       if @guide.save

@@ -4,7 +4,7 @@ class User < ActiveRecord::Base
   # associations
   has_many :created_guides, class_name: "Guide", foreign_key: "creator_id"
   has_many :saved_guides
-  
+
   # validations
   validates :username,
   :uniqueness => {

@@ -1,6 +1,10 @@
 class Guide < ActiveRecord::Base
-	# creates token for sharing before save
+	
+  # creates token for sharing before save
   include Tokenable
+
+  # Validations
+  validates :name, presence: true
 
 	# Associations
   has_many :places

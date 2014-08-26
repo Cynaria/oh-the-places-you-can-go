@@ -1,5 +1,9 @@
 class Place < ActiveRecord::Base
 	
+  # Validations
+  validates :name, presence: true
+
+  # Associations
   belongs_to :guide
 
   # geocode
