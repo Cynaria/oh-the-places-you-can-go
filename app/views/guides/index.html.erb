@@ -1,6 +1,7 @@
 <div id="map-canvas"></div>
 <div class="sidebar">
     <% @guides.each do |guide| %>
+    <% if guide %>
       <div class="item" id="<%= guide.id %>">
         <%= link_to guide.name, guide %>
         <div class ="description" >
@@ -11,6 +12,7 @@
           <%= link_to 'Destroy', guide, method: :delete, data: { confirm: 'Are you sure?' } %>
         <% end %>
       </div>
+    <% end %>
     <% end %>
     <script type="text/javascript">
 
@@ -94,7 +96,9 @@
           }
 
         markers.forEach(function(marker){
-          addMarker(marker);
+          if(marker.guideId != null){
+            addMarker(marker);
+          }
         });
 
         function setAllMap(map) {

@@ -1,6 +1,10 @@
 class Place < ActiveRecord::Base
 	
+  # Associations
   belongs_to :guide, dependent: :destroy
+
+  # Validations
+  validates :name, presence: true
 
   # geocode
   geocoded_by :address
