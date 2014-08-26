@@ -1,7 +1,7 @@
 <div id="map-canvas"></div>
 <div class="sidebar">
     <% @guides.each do |guide| %>
-    <% unless nil %>
+    <% if guide %>
       <div class="item" id="<%= guide.id %>">
         <%= link_to guide.name, guide %>
         <div class ="description" >
