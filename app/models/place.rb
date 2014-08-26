@@ -1,6 +1,6 @@
 class Place < ActiveRecord::Base
 	
-  belongs_to :guide
+  belongs_to :guide, dependent: :destroy
 
   # geocode
   geocoded_by :address
