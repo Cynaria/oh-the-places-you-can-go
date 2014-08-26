@@ -2,7 +2,6 @@
 <div class="sidebar">
   <h3><%= @guide.name %></h3>
     <% @guide.places.each do |place| %>
-    <% if place %>
       <div class="item" id="<%= place.id %>">
         <%= link_to place.name, place %>
         <div class ="description" >
@@ -13,7 +12,6 @@
           <%= link_to 'Destroy', place, method: :delete, data: { confirm: 'Are you sure?' } %>
         <% end %>
       </div>
-    <% end %>
     <% end %>
 </div>
 <%= link_to 'Edit', edit_guide_path(@guide) %> |
