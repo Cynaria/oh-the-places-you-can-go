@@ -4,7 +4,7 @@ Rails.application.routes.draw do
 
   post '/zip', :to => "guides#zip", :as => "zip"
   
-  devise_for :users, ActiveAdmin::Devise.config
+  devise_for :users
   ActiveAdmin.routes(self)
 
   resources :guides
