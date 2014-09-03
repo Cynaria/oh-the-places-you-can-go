@@ -35,6 +35,9 @@ gem 'devise'
 # Use Geocoder for locations
 gem 'geocoder'
 
+# Use Area to get lat/long for zips
+gem 'area'
+
 # Use unicorn as the app server
 # gem 'unicorn'
 

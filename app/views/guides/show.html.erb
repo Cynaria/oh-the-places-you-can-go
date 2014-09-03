@@ -21,11 +21,10 @@
         markers = <%=raw @locations.to_json %>;
         placeMarkers = [];
 
-        var lat = <%= current_user.latitude %>;
-        var lng = <%= current_user.longitude %>;
-        myLocation = new google.maps.LatLng(lat, lng);
+        var lat = <%= @search_center[0] %>;
+        var lng = <%= @search_center[1] %>;
         mapOptions = {
-          center: new google.maps.LatLng(myLocation.lat(), myLocation.lng()),
+          center: new google.maps.LatLng(<%= @center_point[0] %>,<%= @center_point[1] %>),
           zoom: 10,
           mapTypeId: google.maps.MapTypeId.ROADMAP
         };
@@ -65,17 +64,18 @@
               onItemMouseOut(event, marker); 
           });
 
-          function onItemClick(marker,map) { 
-            highlightGuide(marker);
-            disableOnItemMouseOut(marker);
-            createInfoBox(marker,map);
+          function onItemClick(marker,map) {
+              undoHighlights('.item'); 
+              highlightPlace(marker);
+              disableOnItemMouseOut(marker);
+              createInfoBox(marker,map);
           }
 
           function onItemMouseOver(event, marker){
-            highlightGuide(marker);
+            highlightPlace(marker);
           }
           function onItemMouseOut(event, marker){
-            $("#"+marker.id).removeClass("highlighted");
+            undoHighlights("#"+marker.id);
           }
 
           function disableOnItemMouseOut(marker){
@@ -86,6 +86,14 @@
 
           function highlightPlace(marker){
             $("#"+marker.id).addClass("highlighted");
+          }
+
+          function alreadyHighlighted(marker){
+
+          }
+
+          function undoHighlights(item){
+            $(item).removeClass("highlighted");
           }
 
           function createInfoBox(marker,map){

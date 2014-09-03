@@ -13,6 +13,13 @@
 	<div class="nav">
 		<div class="nav-links">
 			<%= link_to "See what's in your area", guides_path, :class => 'button' %>
+			<div class="zip-search">
+				<%= form_tag :guides, :method => "get" do %>
+					<%= label_tag :zip, "Search by Zip code" %>
+					<%= text_field_tag :zip, nil, placeholder: "Zip Code..."%>
+					<%= submit_tag 'Search by zip', :class => 'button' %>
+				<% end %>
+			</div>
 		</div>
 		<div class="user-controls">
 			<% if user_signed_in? %>

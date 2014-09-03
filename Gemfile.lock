@@ -27,6 +27,8 @@ GEM
       minitest (~> 5.1)
       thread_safe (~> 0.1)
       tzinfo (~> 1.1)
+    area (0.10.0)
+      fastercsv (~> 1.5)
     arel (5.0.1.20140414130214)
     bcrypt (3.1.7)
     builder (3.2.2)
@@ -46,6 +48,7 @@ GEM
     diff-lcs (1.2.5)
     erubis (2.7.0)
     execjs (2.2.1)
+    fastercsv (1.5.5)
     geocoder (1.2.2)
     hike (1.2.3)
     i18n (0.6.9)
@@ -142,6 +145,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  area
   coffee-rails (~> 4.0.0)
   devise
   geocoder

@@ -16,6 +16,11 @@ class Guide < ActiveRecord::Base
   	return [get_avg(latitudes), get_avg(longitudes)]
   end
 
+  def self.find_guides_in_radius(location, radius)
+    places_near_user = Place.find_places_in_radius(location, radius)
+    places_near_user.map {|place| place.guide}.uniq
+  end
+
   private
 
   def get_avg(num_arr)
