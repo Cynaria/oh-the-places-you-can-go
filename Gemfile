@@ -38,6 +38,9 @@ gem 'geocoder'
 # Use Area to get lat/long for zips
 gem 'area'
 
+# Use ActiveAdmin for admin dashboard
+gem 'activeadmin', github: 'activeadmin'
+
 # Use unicorn as the app server
 # gem 'unicorn'
 

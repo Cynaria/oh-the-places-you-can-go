@@ -9,8 +9,8 @@
 <script type="application/javascript"> 
 	// map setup
   var markersArray = [];
-	var lat = <%= current_user.latitude %>;
-  var lng = <%= current_user.longitude %>;
+	var lat = <%= @search_center[0] %>;
+  var lng = <%= @search_center[1] %>;
   var myLocation = new google.maps.LatLng(lat, lng);
   var mapOptions = {
     center: new google.maps.LatLng(myLocation.lat(), myLocation.lng()),
@@ -70,7 +70,7 @@
     }
 
     $("#place").on('submit', function(e){
-    	e.preventDefault();
+    	e.preventDefault()
     	addInfoToPlace(place, $("input[name=place-name]").val(), $("textarea[name=place-description]").val());
     	addPlaceToGuide(place);
     	deleteOverlays();
@@ -129,21 +129,26 @@
   });
 
   // form submit
-  $('#new_guide').on('submit',function(e) {  
+  $('#new_guide').on('submit',function(e) {
   	e.preventDefault();
-  	Guide.name = $("#guide_name").val();
-  	Guide.description = $("#guide_description").val();
-  	var data = Guide
-  	var url = $(this).attr('action') 
-    $.ajax({
-    		type: "POST",
-        url: url,
-        data: data,
-        dataType: "JSON",
-        success: function(response){
-        	window.location = response.id
-        }
-    });
+    if(Guide.places_attributes.length == 0){
+      alert("Must add at least one place")
+    }
+    else{
+    	Guide.name = $("#guide_name").val();
+    	Guide.description = $("#guide_description").val();
+    	var data = Guide
+    	var url = $(this).attr('action') 
+      $.ajax({
+      		type: "POST",
+          url: url,
+          data: data,
+          dataType: "JSON",
+          success: function(response){
+          	window.location = response.id
+          }
+      });
+    }
 	});
 
 

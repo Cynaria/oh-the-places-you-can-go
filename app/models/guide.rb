@@ -1,6 +1,10 @@
 class Guide < ActiveRecord::Base
-	# creates token for sharing before save
+	
+  # creates token for sharing before save
   include Tokenable
+
+  # Validations
+  validates :name, presence: true
 
 	# Associations
   has_many :places
@@ -24,6 +28,6 @@ class Guide < ActiveRecord::Base
   private
 
   def get_avg(num_arr)
-  	num_arr.inject(:+)/num_arr.length
+  	(num_arr.inject(:+)) / num_arr.length
   end
 end
