@@ -34,7 +34,7 @@
 				<%= link_to "Settings", edit_user_password_path, :class => 'app-button' %>
 				<%= link_to "Logout", destroy_user_session_path, method: :delete, :class => 'app-button'  %>
 			<% else %>
-				<%= link_to "Sign up", new_user_registration_path, :class => 'app-button'  %> 
+				<%= link_to "Sign up", new_user_password_path, :class => 'app-button'  %> 
 				<%= link_to "Login", new_user_session_path, :class => 'app-button'  %>
 			<% end %>
 		</div>
