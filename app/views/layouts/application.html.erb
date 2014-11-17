@@ -31,7 +31,7 @@
 				<%= current_user.username %>
 				<%= link_to "Add a Guide", new_guide_path, :class => 'app-button' %>
 				<!-- cog icon font -->
-				<%= link_to "Settings", edit_user_password_path, :class => 'app-button' %>
+				<%= link_to "Settings", edit_user_registration_path, :class => 'app-button' %>
 				<%= link_to "Logout", destroy_user_session_path, method: :delete, :class => 'app-button'  %>
 			<% else %>
 				<%= link_to "Sign up", new_user_registration_path, :class => 'app-button'  %> 
