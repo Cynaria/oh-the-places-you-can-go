@@ -6,156 +6,157 @@
 <%= link_to 'Back', guides_path, :class => 'button' %>
 </div>
 
-<script type="application/javascript"> 
-	// map setup
-  var markersArray = [];
-	var lat = <%= @search_center[0] %>;
-  var lng = <%= @search_center[1] %>;
-  var myLocation = new google.maps.LatLng(lat, lng);
-  var mapOptions = {
-    center: new google.maps.LatLng(myLocation.lat(), myLocation.lng()),
-    zoom: 10,
-    mapTypeId: google.maps.MapTypeId.ROADMAP
-  };
+<script type="text/javascript"> 
+  $(document).ready(function(){
+  	// map setup
+    var markersArray = [];
+  	var lat = <%= @search_center[0] %>;
+    var lng = <%= @search_center[1] %>;
+    var myLocation = new google.maps.LatLng(lat, lng);
+    var mapOptions = {
+      center: new google.maps.LatLng(myLocation.lat(), myLocation.lng()),
+      zoom: 10,
+      mapTypeId: google.maps.MapTypeId.ROADMAP
+    };
 
-  var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
-	
-	var Guide = {
-			name: null,
-			description: null,
-			places_attributes: [],
-	};
+    var map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+  	
+  	var Guide = {
+  			name: null,
+  			description: null,
+  			places_attributes: [],
+  	};
 
-	var addPlaceToGuide = function (place){
-		Guide.places_attributes.push(place);
-	}
+  	var addPlaceToGuide = function (place){
+  		Guide.places_attributes.push(place);
+  	}
 
-	function Place (latitude,longitude){
-		this.name = null;
-		this.description = null;
-		this.latitude = latitude;
-		this.longitude = longitude;
-	}
+  	function Place (latitude,longitude){
+  		this.name = null;
+  		this.description = null;
+  		this.latitude = latitude;
+  		this.longitude = longitude;
+  	}
 
 
 
-  function onItemClick(evt) { 
-  	deleteOverlays();
-		var marker = new google.maps.Marker({
-		    position: evt.latLng,
-		    map: map,
-		    title: 'drag to place your marker',
-		    draggable: true
-	  });
+    function onItemClick(evt) { 
+    	deleteOverlays();
+  		var marker = new google.maps.Marker({
+  		    position: evt.latLng,
+  		    map: map,
+  		    title: 'drag to place your marker',
+  		    draggable: true
+  	  });
 
-    markersArray.push(marker);
+      markersArray.push(marker);
 
-		var place = new Place(evt.latLng.lat().toFixed(6),evt.latLng.lng().toFixed(6));
+  		var place = new Place(evt.latLng.lat().toFixed(6),evt.latLng.lng().toFixed(6));
 
-		showMarkerForm("#submit-guide", marker, place)
+  		showMarkerForm("#submit-guide", marker, place)
 
-    google.maps.event.addListener(marker, 'dragend', function(e) {
-      onItemDrag(e, place);        
-    });
+      google.maps.event.addListener(marker, 'dragend', function(e) {
+        onItemDrag(e, place);        
+      });
 
-		// Remove markers from map
-    function deleteOverlays() {
-    	removeMarkerForm("#place");
-      if (markersArray) {
-          for (i in markersArray) {
-              markersArray[i].setMap(null);
-          }
-      markersArray.length = 0;
+  		// Remove markers from map
+      function deleteOverlays() {
+      	removeMarkerForm("#place");
+        if (markersArray) {
+            for (i in markersArray) {
+                markersArray[i].setMap(null);
+            }
+        markersArray.length = 0;
+        }
       }
+
+      $("#place").on('submit', function(e){
+      	e.preventDefault()
+      	addInfoToPlace(place, $("input[name=place-name]").val(), $("textarea[name=place-description]").val());
+      	addPlaceToGuide(place);
+      	deleteOverlays();
+      	addPermanentMarker(place);
+      });
+  	}
+
+  	function addInfoToPlace(place, name, description){
+  		place.name = name;
+  		place.description = description;
+  	}
+
+  	function addPermanentMarker(place){
+  		var marker = new google.maps.Marker({
+  		    position: new google.maps.LatLng(place.latitude, place.longitude),
+  		    map: map,
+  	  });
+
+      infowindow = new google.maps.InfoWindow(); 
+
+  		marker.name = place.name
+  		marker.description = place.description
+  		marker.contentString = "<b>" + marker.name +"</b></br>" + marker.description; 
+
+      google.maps.event.addListener(marker, 'click', function(e) {
+  			createInfoBox(marker,map)
+      });
+
+  	}
+
+  	function createInfoBox(marker,map){
+      infowindow.setContent(marker.contentString); 
+      infowindow.setPosition(marker.position); 
+      infowindow.open(map) 
     }
 
-    $("#place").on('submit', function(e){
-    	e.preventDefault()
-    	addInfoToPlace(place, $("input[name=place-name]").val(), $("textarea[name=place-description]").val());
-    	addPlaceToGuide(place);
-    	deleteOverlays();
-    	addPermanentMarker(place);
-    });
-	}
+  	function onItemDrag(evt, place) { 
+      place.latitude = evt.latLng.lat().toFixed(6);
+      place.longitude = evt.latLng.lng().toFixed(6);
+  	}
 
-	function addInfoToPlace(place, name, description){
-		place.name = name;
-		place.description = description;
-	}
+  	function showMarkerForm(section, marker, place){
+  		$(section).before("<div id=\"place\"><div><form><label for=\"place-name\">Place Name: </label><input placeholder=\"Place Name\" id=\"place-name\" name=\"place-name\"><label for=\"place-description\">Place Description: </label><textarea id=\"place-description\" name=\"place-description\" placeholder=\"Place Description\" col=\"30\" rows=\"10\"></textarea><div><input class=\"button\"type=\"submit\" value=\"Add Place\"></div></form></div></div>")
+  	}
 
-	function addPermanentMarker(place){
-		var marker = new google.maps.Marker({
-		    position: new google.maps.LatLng(place.latitude, place.longitude),
-		    map: map,
-	  });
+  	function removeMarkerForm(section){
+  		$(section).remove();
+  	}
 
-    infowindow = new google.maps.InfoWindow(); 
+  	// On form submit add details to marker then add it to guide
+  	// addPlaceToGuide(place);
 
-		marker.name = place.name
-		marker.description = place.description
-		marker.contentString = "<b>" + marker.name +"</b></br>" + marker.description; 
 
-    google.maps.event.addListener(marker, 'click', function(e) {
-			createInfoBox(marker,map)
+    google.maps.event.addListener(map, 'click', function(e) {
+      onItemClick(e);        
     });
 
-	}
-
-	function createInfoBox(marker,map){
-    infowindow.setContent(marker.contentString); 
-    infowindow.setPosition(marker.position); 
-    infowindow.open(map) 
-  }
-
-	function onItemDrag(evt, place) { 
-    place.latitude = evt.latLng.lat().toFixed(6);
-    place.longitude = evt.latLng.lng().toFixed(6);
-	}
-
-	function showMarkerForm(section, marker, place){
-		$(section).before("<div id=\"place\"><div><form><label for=\"place-name\">Place Name: </label><input placeholder=\"Place Name\" id=\"place-name\" name=\"place-name\"><label for=\"place-description\">Place Description: </label><textarea id=\"place-description\" name=\"place-description\" placeholder=\"Place Description\" col=\"30\" rows=\"10\"></textarea><div><input class=\"button\"type=\"submit\" value=\"Add Place\"></div></form></div></div>")
-	}
-
-	function removeMarkerForm(section){
-		$(section).remove();
-	}
-
-	// On form submit add details to marker then add it to guide
-	// addPlaceToGuide(place);
-
-
-  google.maps.event.addListener(map, 'click', function(e) {
-    onItemClick(e);        
+    // form submit
+    $('#new_guide').on('submit',function(e) {
+    	e.preventDefault();
+      if(Guide.places_attributes.length == 0){
+        alert("Must add at least one place")
+      }
+      else{
+      	Guide.name = $("#guide_name").val();
+      	Guide.description = $("#guide_description").val();
+      	var data = Guide
+      	var url = $(this).attr('action') 
+        $.ajax({
+        		type: "POST",
+            url: url,
+            data: data,
+            dataType: "JSON",
+            success: function(response){
+            	window.location = response.id
+            }
+        });
+      }
+  	});
   });
 
-  // form submit
-  $('#new_guide').on('submit',function(e) {
-  	e.preventDefault();
-    if(Guide.places_attributes.length == 0){
-      alert("Must add at least one place")
-    }
-    else{
-    	Guide.name = $("#guide_name").val();
-    	Guide.description = $("#guide_description").val();
-    	var data = Guide
-    	var url = $(this).attr('action') 
-      $.ajax({
-      		type: "POST",
-          url: url,
-          data: data,
-          dataType: "JSON",
-          success: function(response){
-          	window.location = response.id
-          }
-      });
-    }
-	});
 
-
-
-// create guide object
-// create places object
-// send over as json! :D
-// parse!
-// magic!
+  // create guide object
+  // create places object
+  // send over as json! :D
+  // parse!
+  // magic!
 </script>
