@@ -17,12 +17,10 @@
 <%= link_to 'Edit', edit_guide_path(@guide) %> |
 <%= link_to 'Back', guides_path %>
 <script type="text/javascript">
-
+      $(document).ready(function(){
         markers = <%=raw @locations.to_json %>;
         placeMarkers = [];
-
-        var lat = <%= @search_center[0] %>;
-        var lng = <%= @search_center[1] %>;
+        
         mapOptions = {
           center: new google.maps.LatLng(<%= @center_point[0] %>,<%= @center_point[1] %>),
           zoom: 10,
@@ -115,5 +113,5 @@
 
         map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
         setAllMap(map);
-
+      })
   </script>

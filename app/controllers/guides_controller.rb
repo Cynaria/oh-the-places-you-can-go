@@ -11,7 +11,6 @@ class GuidesController < ApplicationController
     puts params[:zip]
     if params["zip"]
       @search_center = [params[:zip].to_lat, params[:zip].to_lon]
-      puts @search_center
       @locations = Place.find_places_in_radius(zip,20)
       @guides = Guide.find_guides_in_radius(zip, 20)
     else

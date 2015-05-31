@@ -1,0 +1,28 @@
+#map-canvas
+.sidebar
+	%h3= @place.name
+	%p= @place.description
+
+:javascript
+	$(document).ready(function(){
+		var place = #{raw @place.to_json};
+		var lat = place.latitude;
+		var lng = place.longitude;
+
+		mapOptions = {
+			center: new google.maps.LatLng(lat, lng),
+			zoom: 10,
+			mapTypeId: google.maps.MapTypeId.ROADMAP
+		};
+
+		var marker = new google.maps.Marker({
+			position: new google.maps.LatLng(lat, lng),
+			map: null,
+			title: place.name,
+		});
+
+		map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
+
+		marker.setMap(map);
+
+	})

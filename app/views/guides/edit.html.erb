@@ -33,11 +33,13 @@
 		Guide.places_attributes.push(place);
 	}
 
+
+  //TODO
 	var deletePlaceFromGuide = function (place){
 		var placeIndex = Guide.places_attributes.indexOf(place);
 
-		if (index > -1) {
-	    array.splice(index, 1);
+		if (placeIndex > -1) {
+	    Guide.places_attributes.splice(placeIndex, 1);
 		}
 	}
 
@@ -126,7 +128,7 @@
 		});
 
 	  google.maps.event.addListener(marker, 'dragend', function(e){
-	  	place = findPlace(marker.id);
+	  	var place = findPlace(marker.id);
 	  	onItemDrag(e, place);
 	  });
   }
