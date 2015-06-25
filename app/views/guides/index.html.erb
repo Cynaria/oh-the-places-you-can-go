@@ -60,11 +60,11 @@
             });
 
             google.maps.event.addListener(marker, 'mouseover', function(e) {
-              onItemMouseOver(e, marker); 
+              highlightGuide(e, marker); 
             });
 
             google.maps.event.addListener(marker, 'mouseout', function(e) {
-              onItemMouseOut(e, marker); 
+              removeHighlight(e, marker); 
             });
 
             google.maps.event.addListener(infowindow, 'closeclick', function(e){
@@ -77,10 +77,10 @@
               createInfoBox(marker,map);
             }
 
-            function onItemMouseOver(event, marker){
-              highlightGuide(marker);
+            function highlightGuide(event, marker){
+              $("#"+marker.guideId).addClass("highlighted");
             }
-            function onItemMouseOut(event, marker){
+            function removeHighlight(event, marker){
               $("#"+marker.guideId).removeClass("highlighted");
             }
 
@@ -88,10 +88,6 @@
               google.maps.event.addListener(marker, 'mouseout', function(e) {
                 highlightGuide(marker); 
               });
-            }
-
-            function highlightGuide(marker){
-              $("#"+marker.guideId).addClass("highlighted");
             }
 
             function createInfoBox(marker,map){
