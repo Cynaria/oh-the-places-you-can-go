@@ -55,16 +55,16 @@
             infowindow = new google.maps.InfoWindow(); 
 
             google.maps.event.addListener(marker, 'click', function(e) {
-                onItemClick(marker, map); 
+              onItemClick(marker, map); 
                 
             });
 
             google.maps.event.addListener(marker, 'mouseover', function(e) {
-                onItemMouseOver(e, marker); 
+              onItemMouseOver(e, marker); 
             });
 
             google.maps.event.addListener(marker, 'mouseout', function(e) {
-                onItemMouseOut(e, marker); 
+              onItemMouseOut(e, marker); 
             });
 
             google.maps.event.addListener(infowindow, 'closeclick', function(e){
