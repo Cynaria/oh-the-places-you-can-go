@@ -58,11 +58,11 @@
             });
 
             google.maps.event.addListener(marker, 'mouseover', function(e) {
-                onItemMouseOver(event, marker); 
+                onItemMouseOver(e, marker); 
             });
 
             google.maps.event.addListener(marker, 'mouseout', function(e) {
-                onItemMouseOut(event, marker); 
+                onItemMouseOut(e, marker); 
             });
 
             function onItemClick(marker,map) { 
