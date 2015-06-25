@@ -19,6 +19,8 @@
         markers = <%=raw @locations.to_json %>;
         placeMarkers = [];
 
+        var currentMark;
+
         var lat = <%= @search_center[0] %>;
         var lng = <%= @search_center[1] %>;
         myLocation = new google.maps.LatLng(lat, lng);
@@ -65,11 +67,17 @@
                 onItemMouseOut(e, marker); 
             });
 
+            google.maps.event.addListener(infowindow, 'closeclick', function(e){
+              onItemMouseOut(e, currentMark);
+            });
+
             function onItemClick(marker,map) { 
-              // highlightGuide(marker);
+              currentMark = marker;
               disableOnItemMouseOut(marker);
               createInfoBox(marker,map);
             }
+
+
 
             function onItemMouseOver(event, marker){
               highlightGuide(marker);
