@@ -20,6 +20,7 @@
         placeMarkers = [];
 
         var currentMark;
+        var previousMark;
 
         var lat = <%= @search_center[0] %>;
         var lng = <%= @search_center[1] %>;
@@ -55,7 +56,7 @@
             infowindow = new google.maps.InfoWindow(); 
 
             google.maps.event.addListener(marker, 'click', function(e) {
-              onItemClick(marker, map); 
+              onItemClick(e, marker, map); 
                 
             });
 
@@ -72,10 +73,15 @@
               enableRemoveHighlight(currentMark);
             });
 
-            function onItemClick(marker,map) { 
+            function onItemClick(event, marker, map) { 
+              if (previousMark) {
+                removeHighlight(event, previousMark);
+                enableRemoveHighlight(previousMark)
+              };
               currentMark = marker;
               disableRemoveHighlight(currentMark);
               createInfoBox(currentMark,map);
+              previousMark = marker;
             }
 
             function highlightGuide(event, marker){
