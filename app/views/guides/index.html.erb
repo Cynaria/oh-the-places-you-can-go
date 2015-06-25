@@ -68,13 +68,14 @@
             });
 
             google.maps.event.addListener(infowindow, 'closeclick', function(e){
-              onItemMouseOut(e, currentMark);
+              removeHighlight(e, currentMark)
+              enableRemoveHighlight(currentMark);
             });
 
             function onItemClick(marker,map) { 
               currentMark = marker;
-              disableOnItemMouseOut(marker);
-              createInfoBox(marker,map);
+              disableRemoveHighlight(currentMark);
+              createInfoBox(currentMark,map);
             }
 
             function highlightGuide(event, marker){
@@ -84,9 +85,15 @@
               $("#"+marker.guideId).removeClass("highlighted");
             }
 
-            function disableOnItemMouseOut(marker){
+            function disableRemoveHighlight(marker){
               google.maps.event.addListener(marker, 'mouseout', function(e) {
-                highlightGuide(marker); 
+                highlightGuide(e, marker); 
+              });
+            }
+
+            function enableRemoveHighlight(marker){
+              google.maps.event.addListener(marker, 'mouseout', function(e){
+                removeHighlight(e, marker);
               });
             }
 
