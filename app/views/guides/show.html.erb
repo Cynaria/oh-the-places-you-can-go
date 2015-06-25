@@ -1,4 +1,4 @@
-<div id="map-canvas"></div>
+<eadiv id="map-canvas"></div>
 <div class="sidebar">
   <h3><%= @guide.name %></h3>
     <% @guide.places.each do |place| %>
@@ -18,16 +18,21 @@
 <%= link_to 'Back', guides_path %>
 <script type="text/javascript">
       $(document).ready(function(){
+
+
         markers = <%=raw @locations.to_json %>;
         placeMarkers = [];
         
+        // default map style
         mapOptions = {
           center: new google.maps.LatLng(<%= @center_point[0] %>,<%= @center_point[1] %>),
           zoom: 10,
           mapTypeId: google.maps.MapTypeId.ROADMAP
         };
 
+
         function addMarker(marker_info) {
+
           var latLng = new google.maps.LatLng(marker_info.latitude, marker_info.longitude);
           var content = marker_info.infowindow;
 
@@ -55,11 +60,11 @@
           });
 
           google.maps.event.addListener(marker, 'mouseover', function(e) {
-              onItemMouseOver(event, marker); 
+              onItemMouseOver(e, marker); 
           });
 
           google.maps.event.addListener(marker, 'mouseout', function(e) {
-              onItemMouseOut(event, marker); 
+              onItemMouseOut(e, marker); 
           });
 
           function onItemClick(marker,map) {
@@ -99,6 +104,7 @@
             infowindow.setPosition(marker.position); 
             infowindow.open(map) 
           }
+
         }
 
         markers.forEach(function(marker){

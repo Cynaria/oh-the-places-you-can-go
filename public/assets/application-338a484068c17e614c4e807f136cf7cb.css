@@ -1,0 +1,159 @@
+/*
+ * This is a manifest file that'll be compiled into application.css, which will include all the files
+ * listed below.
+ *
+ * Any CSS and SCSS file within this directory, lib/assets/stylesheets, vendor/assets/stylesheets,
+ * or vendor/assets/stylesheets of plugins, if any, can be referenced here using a relative path.
+ *
+ * You're free to add application-wide styles to this file and they'll appear at the bottom of the
+ * compiled file so the styles you add here take precedence over styles defined in any styles
+ * defined in the other CSS/SCSS files in this directory. It is generally better to create a new
+ * file per style scope.
+ *
+ */
+@import url(http://fonts.googleapis.com/css?family=Gochi+Hand);
+@import url(http://fonts.googleapis.com/css?family=Roboto:400,100);
+/* line 3, /Users/elizabethcruz/Desktop/DBC/projects/oh-the-places-you-can-go/app/assets/stylesheets/layout.css.scss */
+html {
+  height: 100%;
+}
+
+/* line 6, /Users/elizabethcruz/Desktop/DBC/projects/oh-the-places-you-can-go/app/assets/stylesheets/layout.css.scss */
+body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  font-family: "Roboto", sans-serif;
+  font-weight: 100;
+  color: #f2eae4;
+}
+
+/* line 16, /Users/elizabethcruz/Desktop/DBC/projects/oh-the-places-you-can-go/app/assets/stylesheets/layout.css.scss */
+.sidebar {
+  display: inline-block;
+  right: 0;
+  top: 10%;
+  width: 18%;
+  background: #555;
+  position: fixed;
+  height: 100%;
+  padding: 1%;
+  overflow: scroll;
+}
+
+/* line 29, /Users/elizabethcruz/Desktop/DBC/projects/oh-the-places-you-can-go/app/assets/stylesheets/layout.css.scss */
+section {
+  height: 100%;
+  top: 10%;
+}
+
+/* line 34, /Users/elizabethcruz/Desktop/DBC/projects/oh-the-places-you-can-go/app/assets/stylesheets/layout.css.scss */
+#map-canvas {
+  width: 80%;
+  height: 90%;
+  top: 10%;
+}
+
+/* line 40, /Users/elizabethcruz/Desktop/DBC/projects/oh-the-places-you-can-go/app/assets/stylesheets/layout.css.scss */
+.nav a {
+  text-decoration: none;
+  color: #f2eae4;
+}
+
+/* line 45, /Users/elizabethcruz/Desktop/DBC/projects/oh-the-places-you-can-go/app/assets/stylesheets/layout.css.scss */
+.nav {
+  height: 10%;
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 1;
+  display: inline-block;
+  padding: 5px 0;
+  background: #555;
+  color: #f2eae4;
+}
+
+/* line 57, /Users/elizabethcruz/Desktop/DBC/projects/oh-the-places-you-can-go/app/assets/stylesheets/layout.css.scss */
+.nav-links {
+  margin-top: 1.5%;
+  margin-left: 2%;
+  float: left;
+}
+
+/* line 63, /Users/elizabethcruz/Desktop/DBC/projects/oh-the-places-you-can-go/app/assets/stylesheets/layout.css.scss */
+.zip-search {
+  display: inline-block;
+}
+
+/* line 67, /Users/elizabethcruz/Desktop/DBC/projects/oh-the-places-you-can-go/app/assets/stylesheets/layout.css.scss */
+.home {
+  margin-top: .9%;
+  margin-left: auto;
+  margin-right: auto;
+  text-align: center;
+  font-size: 2.5em;
+  font-family: 'Gochi Hand', cursive;
+}
+
+/* line 77, /Users/elizabethcruz/Desktop/DBC/projects/oh-the-places-you-can-go/app/assets/stylesheets/layout.css.scss */
+.user-controls {
+  margin-top: 1.5%;
+  margin-right: 2%;
+  float: right;
+  font-weight: 400;
+}
+/* line 83, /Users/elizabethcruz/Desktop/DBC/projects/oh-the-places-you-can-go/app/assets/stylesheets/layout.css.scss */
+.user-controls a {
+  font-weight: 100;
+}
+
+/* line 88, /Users/elizabethcruz/Desktop/DBC/projects/oh-the-places-you-can-go/app/assets/stylesheets/layout.css.scss */
+form {
+  margin-bottom: 15px;
+}
+
+/* line 92, /Users/elizabethcruz/Desktop/DBC/projects/oh-the-places-you-can-go/app/assets/stylesheets/layout.css.scss */
+label {
+  display: none;
+}
+
+/* line 96, /Users/elizabethcruz/Desktop/DBC/projects/oh-the-places-you-can-go/app/assets/stylesheets/layout.css.scss */
+.app-button, form input[type=submit] {
+  color: #f2eae4;
+  margin: 0 5px;
+  padding: 5px 7px;
+  background: #a16b66;
+  border-radius: 5px;
+  border: none;
+}
+/* line 103, /Users/elizabethcruz/Desktop/DBC/projects/oh-the-places-you-can-go/app/assets/stylesheets/layout.css.scss */
+.app-button:hover, form input[type=submit]:hover {
+  background: #ba9897;
+  -webkit-transition: background 200ms;
+  -moz-transition: background 200ms;
+  -o-transition: background 200ms;
+  -ms-transition: background 200ms;
+  transition: background 200ms;
+}
+
+/* line 114, /Users/elizabethcruz/Desktop/DBC/projects/oh-the-places-you-can-go/app/assets/stylesheets/layout.css.scss */
+.alerts {
+  background: #b2dedb;
+}
+
+/* line 118, /Users/elizabethcruz/Desktop/DBC/projects/oh-the-places-you-can-go/app/assets/stylesheets/layout.css.scss */
+.item {
+  padding: 5px 0;
+  border-bottom: 2px solid #888;
+}
+/* line 121, /Users/elizabethcruz/Desktop/DBC/projects/oh-the-places-you-can-go/app/assets/stylesheets/layout.css.scss */
+.item a {
+  color: #b2dedb;
+  border-bottom: 1px solid #888;
+  text-decoration: none;
+}
+
+/* line 128, /Users/elizabethcruz/Desktop/DBC/projects/oh-the-places-you-can-go/app/assets/stylesheets/layout.css.scss */
+.highlighted {
+  background: #a16b66;
+}

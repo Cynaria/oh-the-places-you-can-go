@@ -61,19 +61,6 @@ ActiveRecord::Schema.define(version: 20140902010224) do
 
   add_index "guides", ["creator_id"], name: "index_guides_on_creator_id", using: :btree
 
-  create_table "locations", force: true do |t|
-    t.string   "name"
-    t.text     "description"
-    t.float    "latitude"
-    t.float    "longitude"
-    t.string   "address"
-    t.integer  "guide_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  add_index "locations", ["guide_id"], name: "index_locations_on_guide_id", using: :btree
-
   create_table "places", force: true do |t|
     t.string   "name"
     t.text     "description"
