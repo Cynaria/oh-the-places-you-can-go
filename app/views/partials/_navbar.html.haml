@@ -1,0 +1,41 @@
+%nav.top-bar{"data-topbar" => "", :role => "navigation"}
+  %ul.title-area
+    %li.name
+      %h1
+        = link_to "Roam", root_path
+    %li.toggle-topbar.menu-icon
+      %a{:href => "#"}
+        %span
+  %section.top-bar-section
+    / Right Nav Section
+    %ul.left
+
+    %ul.right
+      - if user_signed_in?
+        %li
+          = link_to current_user.username, edit_user_registration_path 
+        %li
+          = link_to "Add a Guide", new_guide_path
+        %li
+          = link_to "Logout", destroy_user_session_path, method: :delete, :class => 'app-button'
+      - else
+        %li
+          = link_to "Sign up", new_user_registration_path, :class => 'app-button'
+        %li
+          = link_to "Login", new_user_session_path, :class => 'app-button'
+    / Left Nav Section
+    %ul.left
+      %li
+        =link_to "See what's in your area", guides_path
+      %li.has-form
+        .row.collapse
+          = form_tag :guides, :method => "get" do
+            .large-8.small-9.columns.no-padding
+              = text_field_tag :zip, nil, placeholder: "Zip Code..."
+            .large-4.small-3.columns.no-padding
+              = submit_tag 'Search by zip', :class => ['button', 'no-padding']
+.alerts
+  %p.notice
+    = notice
+  %p.alert
+    = alert
