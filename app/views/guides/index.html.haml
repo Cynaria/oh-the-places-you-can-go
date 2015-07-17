@@ -1,0 +1,110 @@
+#map.small-12.large-9.columns.left
+=render 'partials/guides/index_sidebar'
+:javascript
+  markers = #{raw @locations.to_json};
+  placeMarkers = [];
+
+  var currentMark;
+  var previousMark;
+
+  var lat = #{raw @search_center[0]};
+  var lng = #{raw @search_center[1]};
+
+  myLocation = new google.maps.LatLng(lat, lng);
+  mapOptions = {
+    center: new google.maps.LatLng(myLocation.lat(), myLocation.lng()),
+    zoom: 10,
+    mapTypeId: google.maps.MapTypeId.ROADMAP
+  };
+  map = new google.maps.Map(document.getElementById("map"), mapOptions);
+  setAllMap(map);
+  
+  function addMarker(marker_info) {
+      var latLng = new google.maps.LatLng(marker_info.latitude, marker_info.longitude);
+      var content = marker_info.infowindow;
+
+      var marker = new google.maps.Marker({
+          position: latLng,
+          map: null,
+          title: marker_info.name,
+      });
+
+      if (marker_info.drop) {
+          marker.setAnimation(google.maps.Animation.DROP);
+      }
+
+      marker.id = marker_info.id;
+      marker.guideId = marker_info.guide_id;
+      marker.name = marker_info.name;
+      marker.description = marker_info.description;
+      marker.contentString = "<b>" + marker.name +"</b></br>" + marker.description; 
+
+      placeMarkers.push(marker);
+
+      infowindow = new google.maps.InfoWindow(); 
+
+      google.maps.event.addListener(marker, 'click', function(e) {
+        onItemClick(e, marker, map); 
+          
+      });
+
+      google.maps.event.addListener(marker, 'mouseover', function(e) {
+        highlightGuide(e, marker); 
+      });
+
+      google.maps.event.addListener(marker, 'mouseout', function(e) {
+        removeHighlight(e, marker); 
+      });
+
+      google.maps.event.addListener(infowindow, 'closeclick', function(e){
+        removeHighlight(e, currentMark)
+        enableRemoveHighlight(currentMark);
+      });
+
+      function onItemClick(event, marker, map) { 
+        if (previousMark) {
+          removeHighlight(event, previousMark);
+          enableRemoveHighlight(previousMark)
+        };
+        currentMark = marker;
+        disableRemoveHighlight(currentMark);
+        createInfoBox(currentMark,map);
+        previousMark = marker;
+      }
+
+      function highlightGuide(event, marker){
+        $("#"+marker.guideId).addClass("highlighted");
+      }
+      function removeHighlight(event, marker){
+        $("#"+marker.guideId).removeClass("highlighted");
+      }
+
+      function disableRemoveHighlight(marker){
+        google.maps.event.addListener(marker, 'mouseout', function(e) {
+          highlightGuide(e, marker); 
+        });
+      }
+
+      function enableRemoveHighlight(marker){
+        google.maps.event.addListener(marker, 'mouseout', function(e){
+          removeHighlight(e, marker);
+        });
+      }
+
+      function createInfoBox(marker,map){
+        infowindow.setContent(marker.contentString); 
+        infowindow.setPosition(marker.position); 
+        infowindow.open(map) 
+      }
+    }
+
+  markers.forEach(function(marker){
+    addMarker(marker);
+  });
+
+  function setAllMap(map) {
+      for (var i = 0; i < placeMarkers.length; i++) {
+          placeMarkers[i].setMap(map);
+      }
+      
+  }

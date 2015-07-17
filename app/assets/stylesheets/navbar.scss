@@ -1,0 +1,16 @@
+.off-canvas-wrap, .inner-wrap, .main-section {
+  height: 100%;
+  top: 0px;
+}
+
+.sidebar {
+	height: 100%;
+	background-color: #333;
+}
+
+.right-off-canvas-toggle {
+	margin-top: 2rem;
+	background: #333;
+	padding: 0.3rem 0.5rem 0.5rem 0.6rem;
+	border-radius: 10px 0 0 10px;
+}

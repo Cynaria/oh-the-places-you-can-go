@@ -15,6 +15,13 @@
 //= require foundation
 //= require turbolinks
 //= require_tree .
-$(function(){ 
-	$(document).foundation();
+
+$(function(){
+	$(document).foundation()
+		.on('open.fndtn.offcanvas', '[data-offcanvas]', function() {
+			$('.right-off-canvas-toggle').toggleClass('hide');
+		})
+		.on('close.fndtn.offcanvas', '[data-offcanvas]', function() {
+			$('.right-off-canvas-toggle').toggleClass('hide');
+		});
 });

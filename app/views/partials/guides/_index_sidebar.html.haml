@@ -1,0 +1,18 @@
+.off-canvas-wrap#off-canvas-wrapper{ "data-offcanvas" => "" }
+  .inner-wrap
+    %a.right-off-canvas-toggle.right.hide-for-large-up{:href => "#"}
+      =icon('arrow-left')
+    %a.hide.right-off-canvas-toggle.right.hide-for-large-up{:href => "#"}
+      =icon('arrow-right')
+    %aside.sidebar.large-3.columns.right.right-off-canvas-menu#hide-off-right-medium
+      %ul
+        -if @guides
+          - @guides.each do |guide|
+            %li
+              .item{ id: guide.id}
+                = link_to guide.name, guide
+              .description
+                = guide.description
+              -if user_is_creator?(guide)
+                = link_to 'Edit', edit_guide_path(guide)
+                = link_to 'Destroy', guide, method: :delete, data: { confirm: 'Are you sure?' }

@@ -7,9 +7,6 @@
       %a{:href => "#"}
         %span
   %section.top-bar-section
-    / Right Nav Section
-    %ul.left
-
     %ul.right
       - if user_signed_in?
         %li
@@ -34,8 +31,9 @@
               = text_field_tag :zip, nil, placeholder: "Zip Code..."
             .large-4.small-3.columns.no-padding
               = submit_tag 'Search by zip', :class => ['button', 'no-padding']
-.alerts
-  %p.notice
-    = notice
-  %p.alert
+-if notice || alert
+  .alerts
+    %p.notice
+      = notice
+    %p.alert
     = alert
